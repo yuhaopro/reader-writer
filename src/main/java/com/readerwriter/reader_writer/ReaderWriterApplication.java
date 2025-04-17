@@ -5,10 +5,9 @@
 		static Database database = new Database();
 		public static void main(String[] args) {
 
-			int rounds = 100;
+			int rounds = 10;
 			new Reader(rounds, database).start();
 			new Reader(rounds, database).start();
-			new Writer(rounds, database).start();
 			new Writer(rounds, database).start();
 		}
 

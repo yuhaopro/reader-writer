@@ -1,13 +1,10 @@
 package com.readerwriter.reader_writer;
 
-import java.util.Random;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 class Database {
     private Logger logger = LoggerFactory.getLogger(Database.class);
-    private Random generator = new Random();
     private int data = 0; // the data
     int nr = 0;
 
@@ -24,16 +21,15 @@ class Database {
 
     }
 
-    public int read() {
+    public void read() {
         int snapshot;
         startRead(); // thread starts reading
         snapshot = data; // thread gets the current data, which may occur if writer is writing the data.
+        logger.info("read: {}", snapshot);
         endRead();
-        return snapshot;
-
     }
 
-    public synchronized int write() {
+    public synchronized void write() {
         int temp;
         while (nr > 0) {
             try {
@@ -45,7 +41,7 @@ class Database {
         temp = data;
         data = 99999;
         try {
-            Thread.sleep(generator.nextInt(500));
+            Thread.sleep(5000);
 
         } catch (InterruptedException e) {
             logger.error("Interrupted while sleep(): ", e);
@@ -53,6 +49,6 @@ class Database {
         }
         data = temp + 1;
         notify(); // wakes up another writer since this writer has finished writing.
-        return data;
+        logger.info("wrote: {}", data);
     }
 }
